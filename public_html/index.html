@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>login2explore</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script
+        src="https://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+    </head>
+    <body>
+        <form method="post">
+  <label for="eID">ID:</label><br>
+  <input type="text" id="eID" name="ID"><br>
+  <label for="eName">Name:</label><br>
+  <input type="text" id="eName" name="Name"><br>
+  <label for="empEmail">Email:</label><br>
+  <input type="email" id="empEmail" name="Email"><br><br>
+  <input type="button" value="Submit" onclick="saveEmployee();">
+</form>
+        <script>
+            function validateData(){
+                var empIdVar = $("#eId").val();
+                if (empIdVar === "") {
+                alert("Employee ID Required Value");
+                $("#eId").focus();
+                return "";
+                }
+                var empNameVar = $("#eName").val();
+                if (empNameVar === "") {
+                alert("Employee Name is Required Value");
+                $("#eName").focus();
+                return "";
+                }
+                var empEmailVar = $("#empEmail").val();
+                if (empEmailVar === "") {
+                alert("Employee Email is Required Value");
+                $("#empEmail").focus();
+                return "";
+                }
+                var jsonStrObj = {
+                eId: empIdVar,
+                eName: empNameVar,
+                empEmail: empEmailVar
+                };
+                return JSON.stringify(jsonStrObj);
+            }
+            
+//            function createPUTRequest(connToken, dbName, relName, jsonObj) {
+//                var putRequest = "{\n"
+//                + "\"token\" : \""
+//                + connToken
+//                + "\","
+//                + "\"dbName\": \""
+//                + dbName
+//                + "\",\n" + "\"cmd\" : \"PUT\",\n"
+//                + "\"rel\" : \""
+//                + relName + "\","
+//                + "\"jsonStr\": \n"
+//                + jsonObj
+//                + "\n"
+//                + "}";
+//                return putRequest;
+//                }
+//                
+//            function executeCommand(str, dburl, endpoint){
+//                var url = dburl + endpoint;
+//                var jsonObj;
+//                $.post(url, str, function (result) {
+//                    jsonObj = JSON.parse(result);
+//                }).fail(function (result) {
+//                    var dataJsonObj = result.responseText;
+//                    jsonObj = JSON.parse(dataJsonObj);
+//                });
+//                return jsonObj;
+//            }
+            
+            function resetForm(){
+                $("#eId").val("");
+                $("#eName").val("");
+                $("#empEmail").val("");
+                $("#empID").focus();
+            }
+            
+            function saveEmployee(){
+                var jsonStr = validateData();
+                if (jsonStr === "") {
+                    return;
+                }
+                var putReqStr = createPUTRequest("90938682|-31949285030739213|90946203", jsonStr, "Employee", "index");
+//                alert(putReqStr);
+                jQuery.ajaxSetup({async: false});
+                executeCommandAtGivenBaseUrl(putReqStr,"http://api.login2explore.com:5577", "/api/iml");
+                jQuery.ajaxSetup({async: true});
+//                alert(JSON.stringify(resultObj));
+                resetForm();
+            }
+        </script>
+    </body>
+</html>
